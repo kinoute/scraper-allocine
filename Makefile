@@ -1,8 +1,13 @@
 build:
-	@echo "Building Allociné Scrapper container..."
+	@echo "Building Allociné Scraper container..."
 	@docker build -t allocine .
 	@echo "Done building container."
 
 start:
-	@echo "Starting Allociné Scrapper container..."
+	@echo "Starting Allociné Scraper container..."
 	@docker run --rm -it --name "allocine" -v files:/allocine/files allocine
+
+stop:
+	@echo "Stopping Allociné Scraper container..."
+	@docker stop allocine
+	@echo "The Allocine Scraper container has been stopped."

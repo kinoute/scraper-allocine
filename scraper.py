@@ -78,7 +78,7 @@ class AlloCineScraper(object):
 
         self.human_pause = human_pause
 
-        logging.info("Initializing Allocine Scrapper..")
+        logging.info("Initializing Allocine Scraper..")
         logging.info("- Number of pages to scrap: %d", self.number_of_pages)
         logging.info("- Time to wait between pages: %d sec", self.human_pause)
         logging.info("- Results will be stored in: %s", self.dataset_name)
