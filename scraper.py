@@ -2,7 +2,7 @@
 
 Attributes:
     args (object): Arguments parser to run the script from the CLI.
-    scrapper (object): Instance of the main class.
+    scraper (object): Instance of the main class.
 """
 
 from bs4 import BeautifulSoup
@@ -19,15 +19,15 @@ logging.getLogger().setLevel(logging.INFO)
 logging.basicConfig(format="[%(asctime)s] %(message)s")
 
 
-class AlloCineScrapper(object):
+class AlloCineScraper(object):
 
     """Main class to scrap movies from Allociné.fr
 
     Attributes:
         allocine_url (str): Base URL where we will get movie attributes.
-        dataset (pd.DataFrame): Pandas DataFrame with all the scrapped informations.
+        dataset (pd.DataFrame): Pandas DataFrame with all the scraped informations.
         dataset_name (str): CSV Filename of the Pandas DataFrame that hosts all our movie results.
-        human_pause (int): Time to wait before each page scrapped.
+        human_pause (int): Time to wait before each page scraped.
         movie_infos (list): List of movie attributes we're interested in.
         number_of_pages (int): How many pages to scrap on Allociné.fr.
     """
@@ -52,15 +52,15 @@ class AlloCineScrapper(object):
     def __init__(
         self, number_of_pages=50, dataset_name="allocine.csv", human_pause=10
     ) -> None:
-        """Initializes our Scrapper class.
+        """Initializes our Scraper class.
 
         Args:
             number_of_pages (int, optional): How many pages to scrap on Allociné.fr. Default: 50.
             dataset_name (str, optional): Filename of the Pandas DataFrame as CSV. Default: allocine.csv
-            human_pause (int, optional): Time to wait before each page scrapped. Default: 10 sec.
+            human_pause (int, optional): Time to wait before each page scraped. Default: 10 sec.
 
         Raises:
-            Exception: Exists the scrapper if the arguments are not appropriate.
+            Exception: Exists the scraper if the arguments are not appropriate.
         """
 
         if not isinstance(number_of_pages, int) or number_of_pages < 2:
@@ -96,11 +96,11 @@ class AlloCineScrapper(object):
         response = requests.get(self.allocine_url + str(page_number))
         return response
 
-    def start_scrapping_movies(self) -> None:
-        """Starts the scrapping process.
+    def start_scraping_movies(self) -> None:
+        """Starts the scraping process.
         """
 
-        logging.info("Starting scrapping movies from Allocine...")
+        logging.info("Starting scraping movies from Allocine...")
 
         for number in range(1, self.number_of_pages):
 
@@ -113,13 +113,13 @@ class AlloCineScrapper(object):
             self._parse_list_page(response)
 
             logging.info(
-                f"Done scrapping page #{number}. Waiting {self.human_pause} sec before the next one.."
+                f"Done scraping page #{number}. Waiting {self.human_pause} sec before the next one.."
             )
 
             # let's look a fucking human being
             time.sleep(self.human_pause)
 
-        logging.info("Done scrapping Allocine.")
+        logging.info("Done scraping Allocine.")
         logging.info(f"Results are stored in {self.dataset_name}.")
 
     def _parse_list_page(self, page) -> None:
@@ -142,12 +142,12 @@ class AlloCineScrapper(object):
 
                 # take care of unavailable infos for some movies
                 try:
-                    scrapped_info = getattr(self, "_get_movie_" + info)(movie)
+                    scraped_info = getattr(self, "_get_movie_" + info)(movie)
                 except:
-                    scrapped_info = None
+                    scraped_info = None
 
                 # store the movie attribute
-                movie_datas.append(scrapped_info)
+                movie_datas.append(scraped_info)
 
             # add movie infos to the dataframe
             self.dataset.loc[len(self.dataset)] = movie_datas
@@ -337,22 +337,22 @@ if __name__ == "__main__":
         "-p",
         "--pages",
         type=int,
-        help="Number of Pages to scrap.  Default: 50.",
+        help="Number of Pages to scrap. Default: 50.",
         action="store",
         default=50,
     )
 
-    # pause between each page scrapped
+    # pause between each page scraped
     parser.add_argument(
         "-t",
         "--timeout",
         type=int,
-        help="Seconds between each page scrapping.  Default: 10.",
+        help="Seconds between each page scraping. Default: 10.",
         action="store",
         default=10,
     )
 
-    # name of the CSV filename with the scrapped results
+    # name of the CSV filename with the scraped results
     parser.add_argument(
         "-d",
         "--dataset",
@@ -364,8 +364,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    scrapper = AlloCineScrapper(
+    scraper = AlloCineScraper(
         number_of_pages=args.pages, dataset_name=args.dataset, human_pause=args.timeout
     )
 
-    scrapper.start_scrapping_movies()
+    scraper.start_scraping_movies()

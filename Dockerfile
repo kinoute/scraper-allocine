@@ -11,5 +11,5 @@ COPY . /allocine
 
 WORKDIR /allocine
 
-CMD ["scrapper.py"]
+CMD ["scraper.py"]
 ENTRYPOINT ["python3"]
