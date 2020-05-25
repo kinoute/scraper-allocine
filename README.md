@@ -28,7 +28,7 @@ The movie attributes retrieved when available are:
 
 * The movie Summary.
 
-  
+
 
 ## Installation
 
@@ -66,7 +66,7 @@ docker run --rm -it --name "allocine" -v files:/allocine/files allocine
 
 The script has 3 customizable options that can be changed through the command line when running the container :
 
-* **The number of pages to scrap: ** with the `-p` or `—pages` argument (Default: 50) ;
+* **The number of pages to scrap:** with the `-p` or `—pages` argument (Default: 50) ;
 * **The time in sec to wait before each page is scrapped:** with the `-t`or `—timeout` argument (Default: 10) ;
 * **The name of the CSV filename where results will be stored:** with the `-d` or `—dataset` argument (Default: `allocine.csv`).
 
