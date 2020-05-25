@@ -67,7 +67,7 @@ The script has 3 customizable options that can be changed through the command li
 
 * **The number of pages to scrap:** with the `-p` or `—pages` argument (Default: 50) ;
 * **The time in sec to wait before each page is scraped:** with the `-t`or `—timeout` argument (Default: 10) ;
-* **The name of the CSV filename where results will be stored:** with the `-d` or `—dataset` argument (Default: `allocine.csv`).
+* **The CSV filename where results will be stored:** with the `-d` or `—dataset` argument (Default: `allocine.csv`).
 
 For example, if we wanted to scrap 100 pages instead of 50 with 30 secondes between each page and stored the results in a CSV file called `results.csv`, we will do:
 
