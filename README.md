@@ -48,14 +48,13 @@ docker build -t allocine .
 ## Usage
 
 
-
 By default, the script will:
 
 * Scrap the first 50 pages of Allociné ;
 * Wait 10 seconds between each page scraped ;
 * Save the results in a csv filename called `allocine.csv` in the `files` folder.
 
-To tun with these default options, simply do:
+To run the script with these default options, simply do:
 
 ```bash
 docker run --rm -it --name "allocine" -v files:/allocine/files allocine
@@ -64,7 +63,7 @@ docker run --rm -it --name "allocine" -v files:/allocine/files allocine
 
 ### Change default options
 
-The script has 3 customizable options that can be changed through the command line when running the container :
+The script has 3 customizable options that can be changed through the command line when running the container:
 
 * **The number of pages to scrap:** with the `-p` or `—pages` argument (Default: 50) ;
 * **The time in sec to wait before each page is scraped:** with the `-t`or `—timeout` argument (Default: 10) ;
