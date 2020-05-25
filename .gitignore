@@ -1,0 +1,24 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# VS Code
+.vscode/
+
+# Mac OS-specific storage files
+.DS_Store
+
+# vim
+*.swp
+*.swo
+
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+.AppleDouble
+.LSOverride
+
+# Thumbnail cache files
+Thumbs.db
+
+files/*
