@@ -76,6 +76,12 @@ The script automatically update and save the results after every page scraped fo
 
 If for whatever reason, you want to stop the scraping, just do `Ctrl+C` in your Terminal.
 
+## Test
+
+While the scraper is running, you can connect into the postgres container and use `psql` to do any SQL operation by typing `make admin-db` in your project.
+
+You can also simply type `make test-db`. It should return 5 records for the movies table if everything went well.
+
 ## Abuse
 
 This script was just made for fun to play around with BeautifulSoup and Python. Please don't use to do bad things and ruin Allociné servers!
