@@ -1,7 +1,6 @@
 """Scraps various informations about movies on Allocine.fr
 
 Attributes:
-    args (object): Arguments parser to run the script from the CLI.
     scraper (object): Instance of the main class.
 """
 
@@ -33,6 +32,8 @@ class AlloCineScraper(object):
         allocine_url (str): Base URL where we will get movie attributes.
         dataset (pd.DataFrame): Pandas DataFrame with all the scraped informations.
         dataset_name (str): CSV Filename of the Pandas DataFrame that hosts all our movie results.
+        db_conn (object): Connection to our postgres database through psycopg2.
+        db_cursor (object): Cursor to our postgres database through our psycopg2's connection.
         human_pause (int): Time to wait before each page scraped.
         movie_infos (list): List of movie attributes we're interested in.
         number_of_pages (int): How many pages to scrap on Allociné.fr.
@@ -321,6 +322,7 @@ class AlloCineScraper(object):
             Union[float, None]: The movie rating according to the press.
         """
 
+        # get all the available ratings
         movie_ratings = movie.find_all("div", class_="rating-item")
 
         for ratings in movie_ratings:
@@ -343,6 +345,7 @@ class AlloCineScraper(object):
             Union[float, None]: The movie rating according to the spectators.
         """
 
+        # get all the available ratings
         movie_ratings = movie.find_all("div", class_="rating-item")
 
         for ratings in movie_ratings:
