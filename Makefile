@@ -8,7 +8,7 @@ build:
 
 start:
 	@echo "Starting Allociné Scraper containers..."
-	@docker-compose up --build
+	@docker-compose up --build --force-recreate
 
 stop:
 	@echo "Stopping Allociné Scraper containers..."

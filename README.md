@@ -58,7 +58,7 @@ By default, the script will:
 To run the script with these default options, simply do:
 
 ```bash
-docker-compose up --build
+docker-compose up --build --force-recreate
 # or make start
 ```
 
