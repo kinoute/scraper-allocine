@@ -4,11 +4,12 @@ services:
 
   # the allocine scraper
   scraper:
+    image: allocine-scraper
     build:
       context: .
       dockerfile: ./docker/scraper/Dockerfile
       cache_from:
-        - scrapper-allocine_scraper:latest
+        - allocine-scraper:latest
     container_name: allocine-scraper
     volumes:
       - ${PWD}/files:/allocine/files
@@ -20,6 +21,7 @@ services:
 
   # postgres database
   db:
+    image: allocine-db
     build:
       context: .
       dockerfile: ./docker/postgres/Dockerfile
@@ -27,6 +29,8 @@ services:
         - POSTGRES_USER=${POSTGRES_USER}
         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         - PGPASSWORD=${PGPASSWORD}
+      cache_from:
+        - allocine-db:latest
     ports:
       - "5432:5432"
     container_name: allocine-db
