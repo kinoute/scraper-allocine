@@ -58,7 +58,7 @@ By default, the script will:
 To run the script with these default options, simply do:
 
 ```bash
-docker-compose up --building
+docker-compose up --build
 # or make start
 ```
 
