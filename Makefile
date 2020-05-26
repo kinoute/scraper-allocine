@@ -5,7 +5,7 @@ build:
 
 start:
 	@echo "Starting Allociné Scraper container..."
-	@docker run --rm -it --name "allocine" -v files:/allocine/files allocine
+	@docker run --rm -it --name "allocine" -v "$(PWD)/files:/allocine/files" allocine
 
 stop:
 	@echo "Stopping Allociné Scraper container..."

@@ -57,7 +57,7 @@ By default, the script will:
 To run the script with these default options, simply do:
 
 ```bash
-docker run --rm -it --name "allocine" -v files:/allocine/files allocine
+docker run --rm -it --name "allocine" -v "$(PWD)/files:/allocine/files" allocine
 # or make start
 ```
 
@@ -73,7 +73,7 @@ For example, if we wanted to scrap 100 pages instead of 50 with 30 secondes betw
 
 ```bash
 # note that we added the name of the python file in the docker command
-docker run --rm -it --name "allocine" -v files:/allocine/files allocine scraper.py -p 100 -t 30 -d results.csv
+docker run --rm -it --name "allocine" -v "$(PWD)/files:/allocine/files" allocine scraper.py -p 100 -t 30 -d results.csv
 ```
 
 The script automatically update and save the results after every page scraped. If for whatever reason, you want to stop the scraping, just do `CTRL+C`in your Terminal.
