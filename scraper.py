@@ -186,7 +186,10 @@ class AlloCineScraper(object):
         """
 
         self.db_cursor.execute(
-            "INSERT INTO public.movies VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            """INSERT INTO public.movies
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT DO NOTHING
+            """,
             tuple(movie_datas),
         )
         self.db_conn.commit()
