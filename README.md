@@ -46,7 +46,7 @@ docker-compose build
 
 ## Usage
 
-First, you have to rename the `.env.dist` template file to `.env`. Then fill it with your own values. At first start, the postgres environment variables will be used to create the postgres server.
+**Important:** First, you have to rename the `.env.dist` template file to `.env`. Then fill it with your own values. At first start, the postgres environment variables will be used to create the postgres server.
 
 By default, the script will:
 
@@ -58,7 +58,7 @@ By default, the script will:
 To run the script with these default options, simply do:
 
 ```bash
-docker-compose up --build --force-recreate
+docker-compose up --build
 # or make start
 ```
 
