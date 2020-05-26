@@ -8,15 +8,21 @@ Attributes:
 from bs4 import BeautifulSoup
 import requests
 import re
+import os
 import pandas as pd
 import time
-import argparse
 import logging
 from typing import Union
+import psycopg2
 
 # better logging
 logging.getLogger().setLevel(logging.INFO)
 logging.basicConfig(format="[%(asctime)s] %(message)s")
+
+# load and get environment variables
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 
 class AlloCineScraper(object):
@@ -78,6 +84,16 @@ class AlloCineScraper(object):
 
         self.human_pause = human_pause
 
+        # let's connect to the postgres database, shall we?
+        self.db_conn = psycopg2.connect(
+            host="db",
+            dbname=os.getenv("POSTGRES_USER"),
+            user=os.getenv("POSTGRES_USER"),
+        )
+
+        # psycopg2 cursor
+        self.db_cursor = self.db_conn.cursor()
+
         logging.info("Initializing Allocine Scraper..")
         logging.info("- Number of pages to scrap: %d", self.number_of_pages)
         logging.info("- Time to wait between pages: %d sec", self.human_pause)
@@ -119,6 +135,10 @@ class AlloCineScraper(object):
             # let's look a fucking human being
             time.sleep(self.human_pause)
 
+        # we're done here, closing postgres connection
+        self.db_cursor.close()
+        self.db_conn.close()
+
         logging.info("Done scraping Allocine.")
         logging.info(f"Results are stored in {self.dataset_name}.")
 
@@ -152,8 +172,24 @@ class AlloCineScraper(object):
             # add movie infos to the dataframe
             self.dataset.loc[len(self.dataset)] = movie_datas
 
+            # add movie infos to the postgres database
+            self._insert_movie_to_db(movie_datas)
+
         # just to be safe, save after every page
         self.dataset.to_csv("files/" + self.dataset_name, index=False)
+
+    def _insert_movie_to_db(self, movie_datas) -> None:
+        """Private method to insert an individual movie to the postgres db.
+
+        Args:
+            movie_datas (list): The movie datas we just scraped.
+        """
+
+        self.db_cursor.execute(
+            "INSERT INTO public.movies VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            tuple(movie_datas),
+        )
+        self.db_conn.commit()
 
     def _get_movie_id(self, movie) -> int:
         """Private method to retrieve the movie ID according to Allociné.
@@ -169,7 +205,7 @@ class AlloCineScraper(object):
             r"\D", "", movie.find("div", {"class": "content-title"}).a["href"]
         )
 
-        return movie_id
+        return int(movie_id)
 
     def _get_movie_title(self, movie) -> str:
         """Private method to retrieve the movie title.
@@ -287,8 +323,11 @@ class AlloCineScraper(object):
         for ratings in movie_ratings:
 
             if "Presse" in ratings.text:
-                return ratings.find("span", {"class": "stareval-note"}).text
-
+                return float(
+                    re.sub(
+                        ",", ".", ratings.find("span", {"class": "stareval-note"}).text
+                    )
+                )
         return None
 
     def _get_movie_spec_rating(self, movie) -> Union[float, None]:
@@ -306,7 +345,11 @@ class AlloCineScraper(object):
         for ratings in movie_ratings:
 
             if "Spectateurs" in ratings.text:
-                return ratings.find("span", {"class": "stareval-note"}).text
+                return float(
+                    re.sub(
+                        ",", ".", ratings.find("span", {"class": "stareval-note"}).text
+                    )
+                )
 
         return None
 
@@ -327,45 +370,10 @@ class AlloCineScraper(object):
 
 if __name__ == "__main__":
 
-    # make sure we can provide options through the CLI
-    parser = argparse.ArgumentParser(
-        description="Scrap various number of informations about movies listed in Allociné."
-    )
-
-    # number of pages to scrap
-    parser.add_argument(
-        "-p",
-        "--pages",
-        type=int,
-        help="Number of Pages to scrap. Default: 50.",
-        action="store",
-        default=50,
-    )
-
-    # pause between each page scraped
-    parser.add_argument(
-        "-t",
-        "--timeout",
-        type=int,
-        help="Seconds between each page scraping. Default: 10.",
-        action="store",
-        default=10,
-    )
-
-    # name of the CSV filename with the scraped results
-    parser.add_argument(
-        "-d",
-        "--dataset",
-        type=str,
-        help="Filename of the Pandas Dataframe saved as CSV. Default: allocine.csv.",
-        action="store",
-        default="allocine.csv",
-    )
-
-    args = parser.parse_args()
-
     scraper = AlloCineScraper(
-        number_of_pages=args.pages, dataset_name=args.dataset, human_pause=args.timeout
+        number_of_pages=int(os.getenv("NUM_PAGES")),
+        dataset_name=os.getenv("DATASET_NAME"),
+        human_pause=int(os.getenv("TIMEOUT")),
     )
 
     scraper.start_scraping_movies()

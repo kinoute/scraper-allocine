@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+
+  # the allocine scraper
+  scraper:
+    build:
+      context: .
+      dockerfile: ./docker/scraper/Dockerfile
+      cache_from:
+        - scrapper-allocine_scraper:latest
+    container_name: allocine-scraper
+    volumes:
+      - ${PWD}/files:/allocine/files
+    env_file:
+      - .env
+    depends_on:
+      - "db"
+    restart: on-failure
+
+  # postgres database
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/postgres/Dockerfile
+      args:
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        - PGPASSWORD=${PGPASSWORD}
+    ports:
+      - "5432:5432"
+    container_name: allocine-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
