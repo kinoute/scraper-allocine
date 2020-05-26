@@ -1,8 +1,8 @@
 # Scraper Allociné
 
-Just a random scraper to retrieve some datas about movies listed on Allociné.fr.
+Just a random scraper to retrieve some data about movies listed on Allociné.fr.
 
-The script will save movie datas available on the http://www.allocine.fr/films webpage as a `.csv` file and in a postgres database.
+The script will save movie data available on the http://www.allocine.fr/films webpage as a `.csv` file and in a postgres database.
 
 ## Movies informations scraped
 
@@ -58,7 +58,7 @@ By default, the script will:
 To run the script with these default options, simply do:
 
 ```bash
-docker-compose up --build
+docker-compose up --building
 # or make start
 ```
 
