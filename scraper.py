@@ -249,17 +249,19 @@ class AlloCineScraper(object):
         movie_date = dateparser.parse(movie_date, date_formats=["%d %B %Y"])
         return movie_date
 
-    def _get_movie_duration(self, movie: bs4.element.Tag) -> str:
+    def _get_movie_duration(self, movie: bs4.element.Tag) -> int:
         """Private method to retrieve the movie duration.
 
         Args:
             movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
-            str: The movie duration.
+            int: The movie duration in minutes.
         """
 
         movie_duration = movie.find("span", {"class": "spacer"}).next_sibling.strip()
+        duration_timedelta = pd.to_timedelta(movie_duration).components
+        movie_duration = duration_timedelta.hours * 60 + duration_timedelta.minutes
 
         return movie_duration
 
