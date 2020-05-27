@@ -188,7 +188,7 @@ class AlloCineScraper(object):
         # just to be safe, save after every page
         self.dataset.to_csv("files/" + self.dataset_name, index=False)
 
-    def _insert_movie_to_db(self, movie_datas) -> None:
+    def _insert_movie_to_db(self, movie_datas: list) -> None:
         """Private method to insert an individual movie to the postgres db.
 
         Args:
@@ -242,7 +242,7 @@ class AlloCineScraper(object):
             movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
-            str: The movie release date.
+            datetime.datetime: The movie release date.
         """
 
         movie_date = movie.find("span", {"class": "date"}).text.strip()
