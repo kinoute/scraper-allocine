@@ -297,7 +297,7 @@ class AlloCineScraper(object):
         movie_directors = [
             link.text
             for link in movie.find(
-                "div", {"class": "meta-body-item meta-body-directmaision light"}
+                "div", {"class": "meta-body-item meta-body-direction light"}
             ).find_all(["a", "span"], class_=re.compile(r".*blue-link$"))
         ]
 
