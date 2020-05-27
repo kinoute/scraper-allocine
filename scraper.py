@@ -4,6 +4,7 @@ Attributes:
     scraper (object): Instance of the main class.
 """
 
+import bs4
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -57,7 +58,10 @@ class AlloCineScraper(object):
     dataset = pd.DataFrame(columns=movie_infos)
 
     def __init__(
-        self, number_of_pages=50, dataset_name="allocine.csv", human_pause=10
+        self,
+        number_of_pages: int = 50,
+        dataset_name: str = "allocine.csv",
+        human_pause: int = 10,
     ) -> None:
         """Initializes our Scraper class.
 
@@ -100,7 +104,7 @@ class AlloCineScraper(object):
         logging.info("- Time to wait between pages: %d sec", self.human_pause)
         logging.info("- Results will be stored in: %s", self.dataset_name)
 
-    def _get_page(self, page_number) -> requests.models.Response:
+    def _get_page(self, page_number: int) -> requests.models.Response:
         """Private method to get the full content of a webpage.
 
         Args:
@@ -143,7 +147,7 @@ class AlloCineScraper(object):
         logging.info("Done scraping Allocine.")
         logging.info(f"Results are stored in {self.dataset_name}.")
 
-    def _parse_list_page(self, page) -> None:
+    def _parse_list_page(self, page: requests.models.Response) -> None:
         """Private method to parse a single result page from Allociné.fr.
 
         Args:
@@ -193,13 +197,14 @@ class AlloCineScraper(object):
             """,
             tuple(movie_datas),
         )
+
         self.db_conn.commit()
 
-    def _get_movie_id(self, movie) -> int:
+    def _get_movie_id(self, movie: bs4.element.Tag) -> int:
         """Private method to retrieve the movie ID according to Allociné.
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             int: The movie ID according to Allociné.
@@ -211,11 +216,11 @@ class AlloCineScraper(object):
 
         return int(movie_id)
 
-    def _get_movie_title(self, movie) -> str:
+    def _get_movie_title(self, movie: bs4.element.Tag) -> str:
         """Private method to retrieve the movie title.
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             str: The movie title.
@@ -225,11 +230,11 @@ class AlloCineScraper(object):
 
         return movie_title
 
-    def _get_movie_release_date(self, movie) -> str:
+    def _get_movie_release_date(self, movie: bs4.element.Tag) -> str:
         """Private method to retrieve the movie release date.
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             str: The movie release date.
@@ -239,11 +244,11 @@ class AlloCineScraper(object):
 
         return movie_date
 
-    def _get_movie_duration(self, movie) -> str:
+    def _get_movie_duration(self, movie: bs4.element.Tag) -> str:
         """Private method to retrieve the movie duration.
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             str: The movie duration.
@@ -253,11 +258,11 @@ class AlloCineScraper(object):
 
         return movie_duration
 
-    def _get_movie_genres(self, movie) -> str:
+    def _get_movie_genres(self, movie: bs4.element.Tag) -> str:
         """Private method to retrieve the movie genre(s).
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             str: The movie genre(s).
@@ -274,11 +279,11 @@ class AlloCineScraper(object):
 
         return ", ".join(movie_genres)
 
-    def _get_movie_directors(self, movie) -> str:
+    def _get_movie_directors(self, movie: bs4.element.Tag) -> str:
         """Private method to retrieve the movie director(s).
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             str: The movie director(s).
@@ -287,17 +292,17 @@ class AlloCineScraper(object):
         movie_directors = [
             link.text
             for link in movie.find(
-                "div", {"class": "meta-body-item meta-body-direction light"}
+                "div", {"class": "meta-body-item meta-body-directmaision light"}
             ).find_all(["a", "span"], class_=re.compile(r".*blue-link$"))
         ]
 
         return ", ".join(movie_directors)
 
-    def _get_movie_actors(self, movie) -> str:
+    def _get_movie_actors(self, movie: bs4.element.Tag) -> str:
         """Private method to retrieve the movie actor(s).
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             str: The movie actor(s).
@@ -312,11 +317,11 @@ class AlloCineScraper(object):
 
         return ", ".join(movie_actors)
 
-    def _get_movie_press_rating(self, movie) -> Union[float, None]:
+    def _get_movie_press_rating(self, movie: bs4.element.Tag) -> Union[float, None]:
         """Private method to retrieve the movie rating according to the press.
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             Union[float, None]: The movie rating according to the press.
@@ -335,11 +340,11 @@ class AlloCineScraper(object):
                 )
         return None
 
-    def _get_movie_spec_rating(self, movie) -> Union[float, None]:
+    def _get_movie_spec_rating(self, movie: bs4.element.Tag) -> Union[float, None]:
         """Private method to retrieve the movie rating according to the spectators.
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             Union[float, None]: The movie rating according to the spectators.
@@ -359,11 +364,11 @@ class AlloCineScraper(object):
 
         return None
 
-    def _get_movie_summary(self, movie) -> str:
+    def _get_movie_summary(self, movie: bs4.element.Tag) -> str:
         """Private method to retrieve the movie summary.
 
         Args:
-            movie (bs4.element.ResultSet): Parser results with the movie informations.
+            movie (bs4.element.Tag): Parser results with the movie informations.
 
         Returns:
             str: The movie summary.
