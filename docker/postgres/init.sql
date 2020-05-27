@@ -1,7 +1,7 @@
 CREATE TABLE public.movies (
     id int PRIMARY KEY,
     title varchar(255),
-    release_date varchar(255),
+    release_date timestamp default NULL,
     duration varchar(255),
     genres varchar(255),
     directors varchar(255),

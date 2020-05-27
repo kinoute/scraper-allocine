@@ -6,14 +6,19 @@ Attributes:
 
 import bs4
 from bs4 import BeautifulSoup
+import pandas as pd
+import psycopg2
+import dateparser
+
 import requests
 import re
 import os
-import pandas as pd
 import time
 import logging
 from typing import Union
 import psycopg2
+import dateparser
+import datetime
 
 # better logging
 logging.getLogger().setLevel(logging.INFO)
@@ -230,7 +235,7 @@ class AlloCineScraper(object):
 
         return movie_title
 
-    def _get_movie_release_date(self, movie: bs4.element.Tag) -> str:
+    def _get_movie_release_date(self, movie: bs4.element.Tag) -> datetime.datetime:
         """Private method to retrieve the movie release date.
 
         Args:
@@ -241,7 +246,7 @@ class AlloCineScraper(object):
         """
 
         movie_date = movie.find("span", {"class": "date"}).text.strip()
-
+        movie_date = dateparser.parse(movie_date, date_formats=["%d %B %Y"])
         return movie_date
 
     def _get_movie_duration(self, movie: bs4.element.Tag) -> str:

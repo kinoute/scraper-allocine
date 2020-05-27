@@ -6,6 +6,7 @@ LABEL maintainer="Yann Defretin <yann@defret.in"
 RUN apt-get update -qq \
   && DEBIAN_FRONTEND=noninteractive apt-get install -yq \
     --no-install-recommends \
+    locales \
     gcc=4:8.3.0-1 \
     libpq-dev=11.7-0+deb10u1 \
     libevent-dev \
@@ -23,6 +24,8 @@ RUN /bin/bash -c "pip3 install --no-cache-dir -r /allocine/requirements.txt"
 COPY . /allocine
 
 WORKDIR /allocine
+
+ENV LANG fr_FR.UTF-8
 
 CMD ["scraper.py"]
 ENTRYPOINT ["python3"]
