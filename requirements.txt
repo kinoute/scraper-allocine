@@ -11,5 +11,5 @@ six==1.15.0
 soupsieve==2.0.1
 urllib3==2.6.3
 psycopg2==2.8.5
-python-dotenv==0.13.0
+python-dotenv==1.2.2
 dateparser==0.7.4
